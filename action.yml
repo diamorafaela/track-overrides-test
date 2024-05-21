@@ -1,0 +1,40 @@
+name: Track Overrides
+description: Track Changes in Overrides Methods.
+author: Francisco Roldan
+inputs:
+  github-token:
+    description: "GitHub Token"
+    required: true
+branding:
+  icon: alert-circle
+  color: blue
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set base branch
+      shell: bash
+      run: echo "BASE_BRANCH=${{ github.base_ref }}" >> $GITHUB_ENV
+
+    - name: Run override comparison
+      shell: bash
+      id: check_overrides
+      run: |
+          set -e 
+          changed_methods=$(python ${{ github.action_path }}/src/track_overrides.py ${{ github.workspace }})
+          if [[ -n "$changed_methods" ]]; then
+            echo "Override comparison result: $changed_methods"
+            exit 1
+          else
+            echo "No outdated overrides detected."
+          fi
+    
+    - name: Cleanup
+      if: always()
+      shell: bash
+      run: |
+        echo "Cleaning up any orphan processes..."
+        pkill -f ${{ github.action_path }}/src/track_overrides.py || true
+

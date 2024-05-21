@@ -1,11 +1,10 @@
 # Track Overrides
 
-`track-overrides` is a GitHub Action designed to track method overrides in Python projects. It compares the current state of the code against a base branch to identify any changes in overridden methods, which is particularly useful for maintaining custom modifications in large projects.
+`track-overrides` is a GitHub Action designed to track method overrides in Python projects.
+It automatically detects the base branch from the pull request that triggers the action and compares the code changes in the pull request against the corresponding branch in the repository specified in the method annotations. 
 
-## Features
+This comparison is performed using the commit hash associated with each method. If the overridden method and the upstream method have different commit hashes, the action will indicate that the overridden method has changed. This seamless comparison capability enables efficient tracking of method overrides across different branches and repositories.
 
-- **Automated Override Tracking**: Automatically track changes in overridden methods in your Python codebase on every Pull Request.
-- **Dynamic Base Branch Detection**: Automatically detects the base branch from the pull request to compare against.
 
 ## Method Annotation
 

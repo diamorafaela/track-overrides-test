@@ -41,17 +41,9 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
         script: |
-          const { data: { outputs } } = await github.actions.listWorkflowRuns({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            workflow_id: context.workflow,
-            branch: context.ref,
-            event: 'pull_request'
-          });
-          
-          const { changed_methods } = outputs.track_overrides.outputs;
-          
-          const commentBody = "The following override methods have changed in the upstream repository:\n" + changed_methods;
+          const response = await fetch('${{ steps.track_overrides.outputs.changed_methods }}');
+          const changedMethods = await response.text();
+          const commentBody = "The following override methods have changed in the upstream repository:\n" + changedMethods;
           github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,

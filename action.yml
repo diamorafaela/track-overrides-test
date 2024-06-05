@@ -44,7 +44,7 @@ runs:
           const response = await fetch('${{ steps.track_overrides.outputs.changed_methods }}');
           const changedMethods = await response.text();
           const commentBody = "The following override methods have changed in the upstream repository:\n" + changedMethods;
-          github.rest.issues.createComment({
+          await github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: context.issue.number,

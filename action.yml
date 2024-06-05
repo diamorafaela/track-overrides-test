@@ -40,7 +40,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github-token }}
     
     - name: Post comment on PR if overrides changed
-      if: steps.track_overrides.outputs.has_changes == 'true' && inputs.post_comment == 'true'
+      if: steps.track_overrides.outputs.has_changes == 'true' && inputs.post-comment == 'true'
       uses: actions/github-script@v6
       env:
         DATA: ${{ steps.track_overrides.outputs.changed_methods }}

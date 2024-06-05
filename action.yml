@@ -5,6 +5,10 @@ inputs:
   github-token:
     description: "GitHub Token"
     required: true
+  post-comment:
+    description: 'Flag to indicate whether to post a comment on the PR (default: true)'
+    required: false
+    default: true
 branding:
   icon: alert-circle
   color: blue
@@ -25,6 +29,8 @@ runs:
         changed_methods=$(python ${{ github.action_path }}/src/track_overrides.py ${{ github.workspace }})
         echo "::set-output name=changed_methods::${changed_methods}"
         if [[ -n "$changed_methods" ]]; then
+          echo "Override methods have changed in the upstream repository."
+          echo "Changed methods: $changed_methods"
           echo "::set-output name=has_changes::true"
         else
           echo "::set-output name=has_changes::false"
@@ -34,12 +40,13 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github-token }}
     
     - name: Post comment on PR if overrides changed
-      if: steps.track_overrides.outputs.has_changes == 'true'
+      if: steps.track_overrides.outputs.has_changes == 'true' && inputs.post_comment == 'true'
       uses: actions/github-script@v6
       env:
         DATA: ${{ steps.track_overrides.outputs.changed_methods }}
       with:
         github-token: ${{ inputs.github-token }}
+        post-comment: ${{ inputs.post-comment }}
         script: |
           const changedMethods = process.env.DATA;
           const commentBody = "The following override methods have changed in the upstream repository:\n\n" + changedMethods;

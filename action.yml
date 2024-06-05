@@ -8,7 +8,7 @@ inputs:
   post-comment:
     description: 'Flag to indicate whether to post a comment on the PR (default: true)'
     required: false
-    default: true
+    default: 'true'
 branding:
   icon: alert-circle
   color: blue

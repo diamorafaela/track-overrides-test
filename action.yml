@@ -29,6 +29,7 @@ runs:
           echo "has_changes=true" >> $GITHUB_ENV
         else
           echo "has_changes=false" >> $GITHUB_ENV
+        fi
       shell: bash
     
     - name: Post comment on PR if overrides changed

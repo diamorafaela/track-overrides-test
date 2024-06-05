@@ -42,7 +42,7 @@ runs:
         github-token: ${{ inputs.github-token }}
         script: |
           const changedMethods = process.env.DATA;
-          const commentBody = "The following override methods have changed in the upstream repository:\n" + changedMethods;
+          const commentBody = "The following override methods have changed in the upstream repository:\n\n" + changedMethods;
           github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,

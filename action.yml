@@ -36,7 +36,7 @@ runs:
       if: env.has_changes == 'true'
       uses: actions/github-script@v6
       with:
-        github-token: ${{ inputs.github_token }}
+        github-token: ${{ inputs.github-token }}
         script: |
           const changedMethods = process.env.CHANGED_METHODS.split('\n');
           const commentBody = `

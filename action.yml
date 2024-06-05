@@ -30,26 +30,43 @@ runs:
           })
     
     - name: Run override comparison
-      shell: bash
-      id: check_overrides
+      id: track_overrides
       run: |
-          set -e 
-          changed_methods=$(python ${{ github.action_path }}/src/track_overrides.py ${{ github.workspace }})
-          echo "CHANGED_METHODS=$changed_methods" >> $GITHUB_ENV
+        changed_methods=$(python src/track_overrides.py ${{ inputs.directory }})
+        echo "CHANGED_METHODS=$changed_methods" >> $GITHUB_ENV
 
-          if [[ -n "$changed_methods" ]]; then
-            echo "Override methods have changed in the upstream repository."
-            echo "Changed methods: $changed_methods"
-
-            # Post a comment on the PR
-            curl -X POST -H "Authorization: token ${{ inputs.github_token }}" \
-              -H "Accept: application/vnd.github.v3+json" \
-              https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
-              -d "$(jq -nc --arg body "The following override methods have changed in the upstream repository:\n\n$changed_methods" '{body: $body}')"
-
-            exit 1
-          fi
+        if [[ -n "$changed_methods" ]]; then
+          echo "Override methods have changed in the upstream repository."
+          echo "Changed methods: $changed_methods"
+          echo "has_changes=true" >> $GITHUB_ENV
+        else
+          echo "has_changes=false" >> $GITHUB_ENV
+      shell: bash
     
+    - name: Post comment on PR if overrides changed
+      if: env.has_changes == 'true'
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ inputs.github_token }}
+        script: |
+          const changedMethods = process.env.CHANGED_METHODS.split('\n');
+          const commentBody = `
+            The following override methods have changed in the upstream repository:\n
+            ${changedMethods.map(method => `* ${method}`).join('\n')}
+          `;
+          github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+            body: commentBody
+          });
+
+    - name: Fail if overrides changed
+      shell: bash
+      if: env.has_changes == 'true'
+      run: |
+        echo "Override methods have changed in the upstream repository."
+        exit 1
     
     - name: Cleanup
       if: always()

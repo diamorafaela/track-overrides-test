@@ -41,7 +41,7 @@ def compare_commit_hashes(directory):
                     method_name = match.group(4)
                     latest_commit_hash = get_last_commit_hash_for_file_in_branch(repo, file_path)
                     if latest_commit_hash and latest_commit_hash != commit_hash:
-                        changed_methods.append(f"`{method_name}` in file `{file_path}`.")
+                        changed_methods.append(f"- `{method_name}` in file `{file_path}`.")
     return changed_methods
 
 

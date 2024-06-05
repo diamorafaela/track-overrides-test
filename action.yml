@@ -41,10 +41,9 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
         script: |
-          const response = await fetch('${{ steps.track_overrides.outputs.changed_methods }}');
-          const changedMethods = await response.text();
+          const changedMethods = '${{ github.event.steps.track_overrides.outputs.changed_methods }}';
           const commentBody = "The following override methods have changed in the upstream repository:\n" + changedMethods;
-          await github.rest.issues.createComment({
+          github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: context.issue.number,

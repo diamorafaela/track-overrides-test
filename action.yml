@@ -21,7 +21,7 @@ runs:
     - name: Run override comparison
       id: track_overrides
       run: |
-        changed_methods=$(python src/track_overrides.py ${{ inputs.directory }})
+        changed_methods=$(python ${{ github.action_path }}/src/track_overrides.py ${{ inputs.directory }})
         echo "CHANGED_METHODS=$changed_methods" >> $GITHUB_ENV
 
         if [[ -n "$changed_methods" ]]; then

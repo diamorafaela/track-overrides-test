@@ -74,4 +74,6 @@ if __name__ == "__main__":
     changed_methods = compare_hashes(override_comments)
     if changed_methods:
         print("\n".join(changed_methods))
+        print(f"::set-output name=has_changes::true")
+        print(f"::set-output name=changed_methods::{','.join(changed_methods)}")
 

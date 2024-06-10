@@ -55,7 +55,7 @@ def compare_hashes(overrides: List[Dict[str, str]]) -> List[str]:
             <summary>`{override['method']}` in file `{override['path']}</summary>
 
             ```python
-            qwqwqwqe
+            {patch}
             ```
             </details>
             """

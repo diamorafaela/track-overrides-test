@@ -49,7 +49,7 @@ runs:
         post-comment: ${{ inputs.post-comment }}
         script: |
           const changedMethods = process.env.DATA;
-          const commentBody = "The following override methods have changed in the upstream repository:\n\n" + changedMethods;
+          const commentBody = changedMethods;
           github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,

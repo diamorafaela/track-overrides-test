@@ -46,7 +46,6 @@ runs:
         DATA: ${{ steps.track_overrides.outputs.changed_methods }}
       with:
         github-token: ${{ inputs.github-token }}
-        post-comment: ${{ inputs.post-comment }}
         script: |
           const changedMethods = process.env.DATA;
           github.rest.issues.createComment({

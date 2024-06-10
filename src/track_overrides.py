@@ -2,8 +2,8 @@ import os
 import re
 import requests
 import sys
-import subprocess
-from typing import List, Tuple, Dict
+from typing import List, Dict
+
 
 def parse_comments(file_path: str) -> List[Dict[str, str]]:
     pattern = r'HASH:\s*([a-f0-9]+)\s*REPO:\s*(https://github.com/\S+/)\s*PATH:\s*([\w/]+\.py)\s*METHOD:\s*(\w+)'
@@ -13,8 +13,8 @@ def parse_comments(file_path: str) -> List[Dict[str, str]]:
     overrides = [{'hash': match[0], 'repo': match[1], 'path': match[2], 'method': match[3]} for match in matches]
     return overrides
 
+
 def get_latest_commit_hash(repo: str, path: str, method: str) -> str:
-    # Get the latest commit hash affecting the specific method
     try:
         if 'def' not in method:
             method = f'def {method}'
@@ -43,12 +43,23 @@ def get_latest_commit_hash(repo: str, path: str, method: str) -> str:
         return None, None
     return None, None
 
+
 def compare_hashes(overrides: List[Dict[str, str]]) -> List[str]:
     changed_methods = []
     for override in overrides:
         latest_commit_hash, patch = get_latest_commit_hash(override['repo'], override['path'], override['method'])
         if latest_commit_hash and latest_commit_hash != override['hash']:
-            changed_methods.append(f"Override method '{override['method']}' in file '{override['path']}' has changed in the upstream repository. <code>{patch}</code>")
+            output = f"""
+            <details>
+
+            <summary>`{override['method']}` in file `{override['path']}</summary>
+
+            ```python
+            {patch}
+            ```
+            </details>
+            """
+            changed_methods.append(output)
     return changed_methods
 
 if __name__ == "__main__":

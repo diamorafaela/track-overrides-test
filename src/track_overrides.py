@@ -59,7 +59,13 @@ def compare_hashes(overrides: List[Dict[str, str]]) -> List[str]:
             ```
             </details>
             """
-            output = f"{override['method']} in file {override['path']} \n<code>python {patch}</code>"
+            output = f"""
+                {override['method']} in file {override['path']} \n
+                
+                ```diff
+                {patch}
+                ```
+            """
             changed_methods.append(output)
     return changed_methods
 

@@ -58,7 +58,7 @@ def compare_hashes(overrides: List[Dict[str, str]]) -> List[str]:
             {patch}
             ```
             </details>
-            '''
+            '''.strip()
             changed_methods.append(output)
     return changed_methods
 

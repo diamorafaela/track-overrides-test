@@ -73,5 +73,5 @@ if __name__ == "__main__":
     
     changed_methods = compare_hashes(override_comments)
     if changed_methods:
-        print("\n".join(changed_methods))
+        print("TEST")
 

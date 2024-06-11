@@ -59,6 +59,9 @@ def compare_hashes(overrides: List[Dict[str, str]]) -> List[str]:
             ```
             </details>
             """
+            output = f"""
+                `{override['method']}` in file `{override['path']}
+            """
             changed_methods.append(output)
     return changed_methods
 
@@ -73,5 +76,5 @@ if __name__ == "__main__":
     
     changed_methods = compare_hashes(override_comments)
     if changed_methods:
-        print("TEST")
+        print("\n".join(changed_methods))
 

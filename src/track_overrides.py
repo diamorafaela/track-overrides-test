@@ -3,7 +3,6 @@ import re
 import requests
 import sys
 from typing import List, Dict
-import textwrap
 
 
 def parse_comments(file_path: str) -> List[Dict[str, str]]:
@@ -50,7 +49,7 @@ def compare_hashes(overrides: List[Dict[str, str]]) -> List[str]:
     for override in overrides:
         latest_commit_hash, patch = get_latest_commit_hash(override['repo'], override['path'], override['method'])
         if latest_commit_hash and latest_commit_hash != override['hash']:
-            output = textwrap.dedent(f'''
+            output = f'''
             <details>
 
             <summary>`{override['method']}` in file `{override['path']}</summary>
@@ -59,7 +58,7 @@ def compare_hashes(overrides: List[Dict[str, str]]) -> List[str]:
             {patch}
             ```
             </details>
-            '''.strip())
+            '''.strip()
             changed_methods.append(output)
     return changed_methods
 

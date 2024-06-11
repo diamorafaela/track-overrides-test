@@ -49,16 +49,16 @@ def compare_hashes(overrides: List[Dict[str, str]]) -> List[str]:
     for override in overrides:
         latest_commit_hash, patch = get_latest_commit_hash(override['repo'], override['path'], override['method'])
         if latest_commit_hash and latest_commit_hash != override['hash']:
-            output = r'''
+            output = f"""
             <details>
 
-            <summary>{method} in file {path}</summary>
+            <summary>`{override['method']}` in file `{override['path']}</summary>
 
             ```diff
             {patch}
             ```
             </details>
-            '''.format(method=override['method'], path=override['path'], patch=patch)
+            """.strip()
             changed_methods.append(output)
     return changed_methods
 

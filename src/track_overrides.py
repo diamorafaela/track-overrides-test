@@ -84,7 +84,7 @@ if __name__ == "__main__":
                 "path": "file"
             }
             url = f'https://api.github.com/repos/{os.getenv("GITHUB_REPOSITORY")}/issues/{pr_number}/comments'
-            data = {'body': "\n".join(changed_methods)}
+            data = {'body': "\n".join(changed_methods).strip()}
             response = requests.post(url, headers=headers, json=data)
 
 

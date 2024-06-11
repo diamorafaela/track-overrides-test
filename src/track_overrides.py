@@ -73,5 +73,20 @@ if __name__ == "__main__":
     
     changed_methods = compare_hashes(override_comments)
     if changed_methods:
+        for c in changed_methods:
+            headers = {
+                'Authorization': f'token {os.getenv("GITHUB_TOKEN")}',
+                'Accept': 'application/vnd.github.v3+json'
+            }
+
+            override = {
+                "method": "method",
+                "path": "file"
+            }
+            url = f'https://api.github.com/repos/fproldan/test/issues/4/comments'
+            data = {'body': c}
+            response = requests.post(url, headers=headers, json=data)
+
+
         print("\n".join(changed_methods))
 

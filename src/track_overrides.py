@@ -74,8 +74,8 @@ if __name__ == "__main__":
     changed_methods = compare_hashes(override_comments)
     pr_number = os.getenv("GITHUB_REF_NAME").split("/")[0]
     if changed_methods:
-        if os.getenv("POST_COMMENT"):
-            for c in changed_methods:
+        if os.getenv("POST_COMMENT") in [True, 'true']:
+            for comment in changed_methods:
                 headers = {
                     'Authorization': f'token {os.getenv("GITHUB_TOKEN")}',
                     'Accept': 'application/vnd.github.v3+json'
@@ -86,7 +86,7 @@ if __name__ == "__main__":
                     "path": "file"
                 }
                 url = f'https://api.github.com/repos/{os.getenv("GITHUB_REPOSITORY")}/issues/{pr_number}/comments'
-                data = {'body': os.getenv("POST_COMMENT")}
+                data = {'body': comment}
                 response = requests.post(url, headers=headers, json=data)
 
 

@@ -72,20 +72,22 @@ if __name__ == "__main__":
                 override_comments.extend(parse_comments(file_path))
     
     changed_methods = compare_hashes(override_comments)
+    pr_number = os.getenv("GITHUB_REF_NAME").split("/")[0]
     if changed_methods:
-        for c in changed_methods:
-            headers = {
-                'Authorization': f'token {os.getenv("GITHUB_TOKEN")}',
-                'Accept': 'application/vnd.github.v3+json'
-            }
+        if os.getenv("POST_COMMENT"):
+            for c in changed_methods:
+                headers = {
+                    'Authorization': f'token {os.getenv("GITHUB_TOKEN")}',
+                    'Accept': 'application/vnd.github.v3+json'
+                }
 
-            override = {
-                "method": "method",
-                "path": "file"
-            }
-            url = f'https://api.github.com/repos/fproldan/test/issues/4/comments'
-            data = {'body': c}
-            response = requests.post(url, headers=headers, json=data)
+                override = {
+                    "method": "method",
+                    "path": "file"
+                }
+                url = f'https://api.github.com/repos/{os.getenv("GITHUB_REPOSITORY")}/issues/{pr_number}/comments'
+                data = {'body': c}
+                response = requests.post(url, headers=headers, json=data)
 
 
         print("\n".join(changed_methods))

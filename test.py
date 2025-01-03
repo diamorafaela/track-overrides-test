@@ -11,3 +11,6 @@ def validate_pos_paid_amount(self):
     if len(self.payments) == 0 and self.is_pos:
         frappe.throw(_("At least one mode of payment is required for POS invoice."))
 
+
+def test2(self):
+    return

@@ -30,12 +30,16 @@ def get_file_diff(repo_url, base_commit, head_commit, file_path):
 
     if response.status_code != 200:
         print(f"Failed to fetch diff: {response.status_code} - {response.reason}")
+        print(f"API URL: {api_url}")
         return None
 
     diff_data = response.json()
     for file in diff_data.get("files", []):
         if file["filename"] == file_path:
+            print(f"Diff found for {file_path}: {file.get('patch', '')}")
             return file.get("patch", "")
+    
+    print(f"No diff found for {file_path}.")
     return None
 
 

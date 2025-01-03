@@ -30,7 +30,7 @@ runs:
       run: |
           set -e 
           changed_methods=$(python ${{ github.action_path }}/src/track_overrides.py ${{ github.workspace }})
-          echo "${changed_methods}" > $GITHUB_ENV/changed_methods
+          echo "::set-output name=changed_methods::${changed_methods}"
           if [[ -n "$changed_methods" ]]; then
             echo "Override methods have changed in the upstream repository."
             echo "Changed methods: $changed_methods"
@@ -46,6 +46,7 @@ runs:
         DATA: ${{ steps.track_overrides.outputs.changed_methods }}
       with:
         github-token: ${{ inputs.github-token }}
+        post-comment: ${{ inputs.post-comment }}
         script: |
           const changedMethods = process.env.DATA.split("\n").map(line => line.trim()).join("\n");
           const commentBody = "The following override methods have changed in the upstream repository:\n\n" + changedMethods;

@@ -12,6 +12,6 @@ jobs:
         uses: actions/checkout@v2
 
       - name:  Track Overrides
-        uses: diamorafaela/track-overrides@main
+        uses: diamorafaela/track-overrides@diff
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

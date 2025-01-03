@@ -30,7 +30,7 @@ runs:
       run: |
           set -e 
           changed_methods=$(python ${{ github.action_path }}/src/track_overrides.py ${{ github.workspace }})
-          echo "::set-output name=changed_methods::${changed_methods}"
+          echo "${changed_methods}" > $GITHUB_ENV/changed_methods
           if [[ -n "$changed_methods" ]]; then
             echo "Override methods have changed in the upstream repository."
             echo "Changed methods: $changed_methods"
@@ -42,14 +42,11 @@ runs:
     - name: Post comment on PR if overrides changed
       if: steps.track_overrides.outputs.has_changes == 'true' && inputs.post-comment == 'true'
       uses: actions/github-script@v6
-      env:
-        DATA: ${{ steps.track_overrides.outputs.changed_methods }}
       with:
         github-token: ${{ inputs.github-token }}
-        post-comment: ${{ inputs.post-comment }}
         script: |
-          const changedMethods = process.env.DATA;
-          const commentBody = "The following override methods have changed in the upstream repository:\n\n" + changedMethods;
+          const changedMethods = process.env.CHANGED_METHODS;
+          const commentBody = `The following override methods have changed in the upstream repository:\n\n${changedMethods}`;
           github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,

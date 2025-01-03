@@ -1,3 +1,5 @@
+import frappe
+
 
 def validate_pos_paid_amount(self):
     """

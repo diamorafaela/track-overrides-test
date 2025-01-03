@@ -12,6 +12,6 @@ jobs:
         uses: actions/checkout@v2
 
       - name:  Track Overrides
-        uses: ./github-actions/track_overrides
+        uses: ./action.yml
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -48,7 +48,7 @@ runs:
         github-token: ${{ inputs.github-token }}
         post-comment: ${{ inputs.post-comment }}
         script: |
-          const changedMethods = process.env.DATA;
+          const changedMethods = process.env.DATA.split("\n").map(line => line.trim()).join("\n");
           const commentBody = "The following override methods have changed in the upstream repository:\n\n" + changedMethods;
           github.rest.issues.createComment({
             owner: context.repo.owner,
@@ -56,6 +56,10 @@ runs:
             issue_number: context.issue.number,
             body: commentBody
           });
+
+    - name: Debug Changed Methods
+      shell: bash
+      run: echo "${{ steps.track_overrides.outputs.changed_methods }}"
 
     - name: Fail if overrides changed
       shell: bash

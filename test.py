@@ -1,28 +1,17 @@
 import frappe
 
-
-def validate_pos_paid_amount(self):
+@frappe.whitelist()
+def get_item_details(args, doc=None, for_validate=False, overwrite_warehouse=True):
 	"""
-	HASH: 4f29908aa94c9cc4d189c38bb73b30c16b894f05
+	HASH: 5c5349ed16680a22a8fd16a1f6f9ed16957069b4
 	REPO: https://github.com/frappe/erpnext/
-	PATH: erpnext/accounts/doctype/sales_invoice/sales_invoice.py
-	METHOD: validate_pos_paid_amount
+	PATH: erpnext/stock/get_item_details.py
+	METHOD: get_item_details
 	"""
-	if len(self.payments) == 0 and self.is_pos:
-		frappe.throw(_("At least one mode of payment is required for POS invoice."))
+	import erpnext.stock.get_item_details
 
-
-def add_remarks(self):
-	"""
-	HASH: 6b1acc3283aaa647786f588965e0b7db14dfccd8
-	REPO: https://github.com/frappe/erpnext/
-	PATH: erpnext/accounts/doctype/sales_invoice/sales_invoice.py
-	METHOD: add_remarks
-	"""
-	if not self.remarks:
-		if self.po_no and self.po_date:
-			self.remarks = _("Against Customer Order {0} dated {1}").format(
-				self.po_no, formatdate(self.po_date)
-			)
-		else:
-			self.remarks = _("No Remarks")
+	erpnext.stock.get_item_details.validate_item_details = validate_item_details
+	out = erpnext.stock.get_item_details.get_item_details(
+		args, doc, for_validate, overwrite_warehouse
+	)
+	return out
